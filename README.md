@@ -12,7 +12,7 @@ Download the code as zip, install the add-on from prefrences menu.
 4. Create a cube called `step_col` to be your collision mesh
 5. Create an Armature called "Armature" with a single bone called `root`
 6. Position the Armature at the exact same position as the BezierCircle
-7. Click `Execute` to generate bones along the path with attached copies of the meshes.
+7. Select any object in object mode and Click `Execute` to generate bones along the path with attached copies of the meshes.
 8. Select the armature, go into Pose mode
 9. Select one of the newly created bones, go to bone constraints, click "Animate Path".  You only need to do this once on one bone
 10. Play the animation to test it.
