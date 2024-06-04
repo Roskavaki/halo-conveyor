@@ -9,9 +9,8 @@ from bpy.props import (StringProperty, BoolProperty,
 bl_info = {
     "name": "halo-conveyors",
     "author": "Roskavaki",
-    "version": (1,0),
+    "version": (1, 0),
     "blender": (2, 80, 0),
-    "location": "View3D in the side tabs",
     "support": "COMMUNITY",
     "category": "3D View",
 }
