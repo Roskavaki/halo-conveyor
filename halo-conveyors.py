@@ -10,7 +10,8 @@ bl_info = {
     "name": "halo-conveyors",
     "author": "Roskavaki",
     "version": (1, 0),
-    "blender": (2, 80, 0),
+    "blender": (4, 0, 0),
+    "location": "View3D > Side tab called Conveyor",
     "support": "COMMUNITY",
     "category": "3D View",
 }

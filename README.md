@@ -2,7 +2,8 @@
 Blender extension for making Halo conveyor belts and escalators. Conveyor surfaces were added in Halo2, but removed afterwards. So in Halo4 onwards we have to use "device machine" setups.
 
 # Installation
-Download the code as zip, install the add-on from prefrences menu.
+1. Download the latest release Zip file from the releases tab.
+2. Install the add-on from prefrences menu.
 
 # How to use
 0. Create a scale model of MasterChief or Arbiter for reference.
@@ -12,11 +13,12 @@ Download the code as zip, install the add-on from prefrences menu.
 4. Create a cube called `step_col` to be your collision mesh
 5. Create an Armature called "Armature" with a single bone called `root`
 6. Position the Armature at the exact same position as the BezierCircle
-7. Select any object in object mode and Click `Execute` to generate bones along the path with attached copies of the meshes.
-8. Select the armature, go into Pose mode
-9. Select one of the newly created bones, go to bone constraints, click "Animate Path".  You only need to do this once on one bone
-10. Play the animation to test it.
-11. To give the machine a main body, create a mesh and parent it to the root bone.
+7. Select any object in object mode.
+8. Click `Execute` to generate bones along the path with attached copies of the meshes.
+9. Select the armature, go into Pose mode
+10. Select one of the newly created bones, go to bone constraints, click "Animate Path".  You only need to do this once on one bone
+11. Play the animation to test it.
+12. To give the machine a main body, create a mesh and parent it to the root bone.
 
 # Exporting to halo
 0. Follow the device machine tutorial on c20 to understand the process
