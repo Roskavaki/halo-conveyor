@@ -101,7 +101,7 @@ def deleteBone(bone_name="Bone", armature="Armature"):
     bpy.ops.object.mode_set(mode='OBJECT')
     
 
-
+''' Adds a Follow Path constraint to a bone '''
 def addConstrainToBone(bone_name="Bone", offset=1, armature_name="Armature", bezier_name="BezierCircle", follow=False, forward='FORWARD_X', up='UP_Z'):
     #print(f"add constraint to {bone_name}")
     
@@ -147,7 +147,7 @@ def deleteCopies(name="name"):
 
 
 ''' Create bones with constraints as children of root '''
-def create_n_bones(n=1,spacing=2,armature_name="Armature", path="BezierCircle", mesh_name="step", phys_name="step_phys", col_name="step_col", follow=False, forward='FORWARD_X', up='UP_Z'):
+def create_n_bones(n=1,spacing=2,armature_name="Armature", path="BezierCircle", mesh_name="step", phys_name="step_phys", col_name="step_col", follow=False, forward='FORWARD_X', up='UP_Z', relative_par=True):
     # Return to Object Mode
     bpy.ops.object.mode_set(mode='OBJECT')
         
@@ -163,6 +163,7 @@ def create_n_bones(n=1,spacing=2,armature_name="Armature", path="BezierCircle", 
     bonesCreated = []
     for i in range(0,n):
         new_bone = createNewBone('Bone' , armature_name)
+        new_bone.use_relative_parent = relative_par
         bonesCreated.append(new_bone.name)
     
     bpy.ops.object.mode_set(mode='OBJECT')
@@ -219,7 +220,7 @@ def create_n_bones(n=1,spacing=2,armature_name="Armature", path="BezierCircle", 
 
 
 '''The main function '''
-def spawnSteps(armature_name="Armature", path="BezierCircle", mesh_name="step", physmesh="step_phys", colmesh="step_col", steps=1, spacing=4, follow=False, forward='FORWARD_X', up='UP_Z'):    
+def spawnSteps(armature_name="Armature", path="BezierCircle", mesh_name="step", physmesh="step_phys", colmesh="step_col", steps=1, spacing=4, follow=False, forward='FORWARD_X', up='UP_Z', relativeParent=True):    
     if steps<1:
         print("must have at least 1 step")
         return
@@ -244,9 +245,9 @@ def spawnSteps(armature_name="Armature", path="BezierCircle", mesh_name="step", 
     #delete all except root bone
     delbones(armature_name,"root")
     
-    create_n_bones(steps,spacing, armature_name, path, mesh_name, physmesh, colmesh, follow, forward, up)
+    create_n_bones(steps,spacing, armature_name, path, mesh_name, physmesh, colmesh, follow, forward, up, relativeParent)
 
-
+'''Execute'''
 class AddStepsBtn(Operator):
     bl_idname="object.addsteps"
     bl_label="add steps"
@@ -254,14 +255,14 @@ class AddStepsBtn(Operator):
     
     def execute(self,context):        
         cs = context.scene        
-        spawnSteps(cs.armatureName, cs.bezierName, cs.renderMeshName, cs.physMeshName, cs.colMeshName, cs.numSteps, cs.spacing, cs.followPath, cs.fwd, cs.up)
+        spawnSteps(cs.armatureName, cs.bezierName, cs.renderMeshName, cs.physMeshName, cs.colMeshName, cs.numSteps, cs.spacing, cs.followPath, cs.fwd, cs.up, cs.relativeParent)
         return {'FINISHED'}
 
+'''Update spacing between the steps'''
 class UpdateSpacingBtn(Operator):
     bl_idname="object.updatespaccing"
     bl_label="update spacing"
     bl_region_type = 'UI'
-    
     
     def execute(self,context):
         print("update spacing")
@@ -321,7 +322,10 @@ class HelloWorldPanel(bpy.types.Panel):
         row.prop(context.scene, "spacing", text="Spacing")
         
         row = layout.row()
-        row.prop(context.scene, "followPath", text="Follow Path")   
+        row.prop(context.scene, "followPath", text="Follow Path")
+
+        row = layout.row()
+        row.prop(context.scene, "relativeParent", text="Relative Parent")
 
         row = layout.row()
         row.prop(context.scene, "fwd", text="Forward")
@@ -366,7 +370,12 @@ def register():
             ),
         )
     #https://docs.blender.org/api/current/bpy.ops.constraint.html#bpy.ops.constraint.followpath_path_animate
-        
+    
+    bpy.types.Scene.relativeParent = bpy.props.BoolProperty(
+        name="RelativeParent",
+        description="Fixes rotations.",
+        default = True)
+            
     bpy.types.Scene.followPath = bpy.props.BoolProperty(
         name="FollowPath",
         description="Make elements follow the direction of the path.",
@@ -388,7 +397,7 @@ def register():
         default = "Armature")
         
     bpy.types.Scene.bezierName = bpy.props.StringProperty(
-        name="armature",
+        name="bezier",
         description="Name of path",
         default = "BezierCircle")
         
@@ -399,12 +408,12 @@ def register():
 
     bpy.types.Scene.physMeshName = bpy.props.StringProperty(
         name="physics mesh",
-        description="Start with $",
+        description="",
         default = "step_phys")
         
     bpy.types.Scene.colMeshName = bpy.props.StringProperty(
         name="collision mesh",
-        description="Start with @",
+        description="",
         default = "step_col")
         
     for cls in classes:
